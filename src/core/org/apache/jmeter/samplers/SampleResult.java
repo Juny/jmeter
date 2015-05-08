@@ -1028,6 +1028,15 @@ public class SampleResult implements Serializable, Cloneable {
     }
 
     /**
+     * Add by guojunying
+     * Set ElapsedTime, Transaction response time
+     */
+    public void setElapsedTime(long start, long end) {
+        this.setStartTime(start);
+        this.setEndTime(end);
+    }
+
+    /**
      * Set idle time pause.
      * For use by SampleResultConverter/CSVSaveService.
      * @param idle long

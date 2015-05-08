@@ -19,9 +19,11 @@
 package org.apache.jmeter.protocol.java.sampler;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.jmeter.config.Arguments;
+import org.apache.jmeter.samplers.SampleListener;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 
@@ -47,6 +49,11 @@ public class JavaSamplerContext {
 
     /** Logging */
     private static final Logger log = LoggingManager.getLoggerForClass();
+
+    /**
+     * add by guojunying
+     */
+    public List<SampleListener> sampleListeners = null;
 
     /**
      * Map containing the initialization parameters for the JavaSamplerClient.

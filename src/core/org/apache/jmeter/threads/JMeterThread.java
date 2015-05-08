@@ -36,6 +36,7 @@ import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.processor.PostProcessor;
 import org.apache.jmeter.processor.PreProcessor;
+import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Interruptible;
 import org.apache.jmeter.samplers.SampleEvent;
 import org.apache.jmeter.samplers.SampleListener;
@@ -422,7 +423,8 @@ public class JMeterThread implements Runnable, Interruptible {
                 threadVars.putObject(PACKAGE_OBJECT, pack);
 
                 delay(pack.getTimers());
-                Sampler sampler = pack.getSampler();
+                // Sampler sampler = pack.getSampler(); // comment by guojunying
+                AbstractSampler sampler = (AbstractSampler)pack.getSampler();
                 sampler.setThreadContext(threadContext);
                 // TODO should this set the thread names for all the subsamples?
                 // might be more efficient than fetching the name elsewehere
@@ -431,6 +433,8 @@ public class JMeterThread implements Runnable, Interruptible {
 
                 // Perform the actual sample
                 currentSampler = sampler;
+                List<SampleListener> sampleListeners = getSampleListeners(pack, transactionPack, transactionSampler);   // add by guojunying
+                sampler.sampleListeners = sampleListeners;      // add by guojunying
                 SampleResult result = sampler.sample(null);
                 currentSampler = null;
                 // TODO: remove this useless Entry parameter
@@ -452,7 +456,7 @@ public class JMeterThread implements Runnable, Interruptible {
                     runPostProcessors(pack.getPostProcessors());
                     checkAssertions(pack.getAssertions(), result, threadContext);
                     // Do not send subsamples to listeners which receive the transaction sample
-                    List<SampleListener> sampleListeners = getSampleListeners(pack, transactionPack, transactionSampler);
+                    // List<SampleListener> sampleListeners = getSampleListeners(pack, transactionPack, transactionSampler);  delete by guojunying
                     notifyListeners(sampleListeners, result);
                     compiler.done(pack);
                     // Add the result as subsample of transaction if we are in a transaction

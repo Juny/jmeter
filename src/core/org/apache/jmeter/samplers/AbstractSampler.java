@@ -18,6 +18,8 @@
 
 package org.apache.jmeter.samplers;
 
+import java.util.List;
+
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.util.ConfigMergabilityIndicator;
 import org.apache.jmeter.testelement.AbstractTestElement;
@@ -27,6 +29,11 @@ public abstract class AbstractSampler extends AbstractTestElement implements Sam
 
     /**
      * {@inheritDoc}
+     * add by guojunying
+     */
+    public List<SampleListener> sampleListeners = null;
+    
+    /**
      */
     @Override
     public boolean applies(ConfigTestElement configElement) {

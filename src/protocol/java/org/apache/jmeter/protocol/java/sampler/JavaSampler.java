@@ -188,6 +188,11 @@ public class JavaSampler extends AbstractSampler implements TestStateListener {
             javaClient.setupTest(context);
         }
 
+        // add by guojunying
+        // *******************************begin******************************
+        context.sampleListeners = this.sampleListeners;
+        // ********************************end*******************************
+
         SampleResult result = javaClient.runTest(context);
 
         // Only set the default label if it has not been set
