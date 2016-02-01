@@ -20,12 +20,14 @@ package org.apache.jorphan.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.jmeter.visualizers.SamplingStatCalculator;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.jorphan.reflect.Functor;
 import org.apache.log.Logger;
@@ -149,11 +151,31 @@ public class ObjectTableModel extends DefaultTableModel {
             }
         }
         objects.add(value);
+        if(value instanceof SamplingStatCalculator){
+            objects.sort(new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    SamplingStatCalculator s1 = (SamplingStatCalculator) o1;
+                    SamplingStatCalculator s2 = (SamplingStatCalculator) o2;
+                    return s1.getLabel().compareTo(s2.getLabel());
+                }
+            });
+        }
         super.fireTableRowsInserted(objects.size() - 1, objects.size());
     }
 
     public void insertRow(Object value, int index) {
         objects.add(index, value);
+        if(value instanceof SamplingStatCalculator){
+            objects.sort(new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    SamplingStatCalculator s1 = (SamplingStatCalculator) o1;
+                    SamplingStatCalculator s2 = (SamplingStatCalculator) o2;
+                    return s1.getLabel().compareTo(s2.getLabel());
+                }
+            });
+        }
         super.fireTableRowsInserted(index, index + 1);
     }
 
