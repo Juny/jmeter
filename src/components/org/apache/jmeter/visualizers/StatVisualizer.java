@@ -19,9 +19,12 @@
 package org.apache.jmeter.visualizers;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -177,6 +180,25 @@ public class StatVisualizer extends AbstractVisualizer implements Clearable, Act
         myJTable = new JTable(model);
         myJTable.getTableHeader().setDefaultRenderer(new HeaderAsPropertyRenderer(StatGraphVisualizer.COLUMNS_MSG_PARAMETERS));
         myJTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        myJTable.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                myJTable.setSelectionBackground(Color.gray);
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+        });
         RendererUtils.applyRenderers(myJTable, StatGraphVisualizer.RENDERERS);
         myScrollPane = new JScrollPane(myJTable);
         this.add(mainPanel, BorderLayout.NORTH);
