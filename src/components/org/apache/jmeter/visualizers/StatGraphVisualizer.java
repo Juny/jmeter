@@ -109,6 +109,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
     static final String[] COLUMNS = { 
             "sampler_label",                  //$NON-NLS-1$
             "aggregate_report_count",         //$NON-NLS-1$
+            "aggregate_report_error",         //$NON-NLS-1$
             "average",                        //$NON-NLS-1$
             "aggregate_report_median",        //$NON-NLS-1$
             "aggregate_report_xx_pct1_line",      //$NON-NLS-1$
@@ -121,6 +122,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
             "aggregate_report_bandwidth" };   //$NON-NLS-1$
     
     static final Object[][] COLUMNS_MSG_PARAMETERS = { null, //$NON-NLS-1$
+            null,                             //$NON-NLS-1$
             null,                             //$NON-NLS-1$
             null,                             //$NON-NLS-1$
             null,                             //$NON-NLS-1$
@@ -291,6 +293,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
                 new Functor[] {
                 new Functor("getLabel"),                    //$NON-NLS-1$
                 new Functor("getCount"),                    //$NON-NLS-1$
+                new Functor("getErrorCount"),                    //$NON-NLS-1$
                 new Functor("getMeanAsNumber"),                //$NON-NLS-1$
                 new Functor("getMedian"),                    //$NON-NLS-1$
                 new Functor("getPercentPoint",                //$NON-NLS-1$
@@ -304,8 +307,8 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
                 new Functor("getErrorPercentage"),            //$NON-NLS-1$
                 new Functor("getRate"),                        //$NON-NLS-1$
                 new Functor("getKBPerSecond") },            //$NON-NLS-1$
-                new Functor[] { null, null, null, null, null, null, null, null, null, null, null, null },
-                new Class[] { String.class, Long.class, Long.class, Long.class, Long.class, 
+                new Functor[] { null, null, null, null, null, null, null, null, null, null, null, null, null },
+                new Class[] { String.class, Long.class, Long.class, Long.class, Long.class, Long.class, 
                             Long.class, Long.class, Long.class, Long.class, String.class, 
                             String.class, String.class });
     }
@@ -315,6 +318,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
         new Format[]{
             null, // Label
             null, // count
+            null, // error count
             null, // Mean
             null, // median
             null, // 90%
@@ -332,6 +336,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
         new TableCellRenderer[]{
             null, // Label
             null, // count
+            null, // error count
             null, // Mean
             null, // median
             null, // 90%
