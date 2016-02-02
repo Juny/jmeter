@@ -325,4 +325,12 @@ public class ObjectTableModel extends DefaultTableModel {
             addRow(val);
         }
     }
+
+    private long lastFireTableDataTime;
+    public synchronized void fireTableDataChanged() {
+        if(new java.util.Date().getTime() > lastFireTableDataTime + 1000){
+            super.fireTableDataChanged();
+            lastFireTableDataTime = new java.util.Date().getTime();
+        }
+    }
 }
