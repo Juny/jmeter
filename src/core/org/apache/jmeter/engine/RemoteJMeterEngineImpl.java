@@ -42,6 +42,8 @@ public final class RemoteJMeterEngineImpl extends java.rmi.server.UnicastRemoteO
     private static final long serialVersionUID = 240L;
 
     private static final Logger log = LoggingManager.getLoggerForClass();
+    
+    public static int runnerId = 0;
 
     static final String JMETER_ENGINE_RMI_NAME = "JMeterEngine"; // $NON-NLS-1$
 
@@ -197,13 +199,13 @@ public final class RemoteJMeterEngineImpl extends java.rmi.server.UnicastRemoteO
         log.info("Exitting");
         backingEngine.exit();
         // Tidy up any objects we created
-        Registry reg = LocateRegistry.getRegistry(this.rmiPort);        
-        try {
-            reg.unbind(JMETER_ENGINE_RMI_NAME);
-        } catch (NotBoundException e) {
-            log.warn(JMETER_ENGINE_RMI_NAME+" is not bound",e);
-        }
-        log.info("Unbound from registry");
+//        Registry reg = LocateRegistry.getRegistry(this.rmiPort);        
+//        try {
+//            reg.unbind(JMETER_ENGINE_RMI_NAME);
+//        } catch (NotBoundException e) {
+//            log.warn(JMETER_ENGINE_RMI_NAME+" is not bound",e);
+//        }
+//        log.info("Unbound from registry");
         // Help with garbage control
         JMeterUtils.helpGC();
     }
@@ -234,5 +236,10 @@ public final class RemoteJMeterEngineImpl extends java.rmi.server.UnicastRemoteO
             log.warn(msg);
             throw new IllegalStateException(msg);            
         }
+    }
+
+    @Override
+    public void rsetRunnerId(int id) throws RemoteException {
+        runnerId = id;
     }
 }
