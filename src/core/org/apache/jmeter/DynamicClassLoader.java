@@ -17,6 +17,9 @@
  */
 package org.apache.jmeter;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
@@ -61,5 +64,54 @@ public class DynamicClassLoader extends URLClassLoader {
         for(URL url : urls) {
             loader.addURL(url);
         }
+    }
+    
+    private static final String CLASSPATH_SEPARATOR = File.pathSeparator;
+
+    private static final String OS_NAME = System.getProperty("os.name");// $NON-NLS-1$
+
+    private static final String OS_NAME_LC = OS_NAME.toLowerCase(java.util.Locale.ENGLISH);
+
+    private static final String JAVA_CLASS_PATH = "java.class.path";// $NON-NLS-1$
+    
+    public void addPath(String path) throws MalformedURLException {
+        File file = new File(path);
+        // Ensure that directory URLs end in "/"
+        if (file.isDirectory() && !path.endsWith("/")) {// $NON-NLS-1$
+            file = new File(path + "/");// $NON-NLS-1$
+        }
+        addURL(file.toURI().toURL()); // See Java bug 4496398
+        StringBuilder sb = new StringBuilder(System.getProperty(JAVA_CLASS_PATH));
+        sb.append(CLASSPATH_SEPARATOR);
+        sb.append(path);
+        File[] jars = listJars(file);
+        for (File jar : jars) {
+            try {
+                addURL(jar.toURI().toURL()); // See Java bug 4496398
+                sb.append(CLASSPATH_SEPARATOR);
+                sb.append(jar.getPath());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // ClassFinder needs this
+        System.setProperty(JAVA_CLASS_PATH,sb.toString());
+    }
+    
+    private static File[] listJars(File dir) {
+        if (dir.isDirectory()) {
+            return dir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File f, String name) {
+                    if (name.endsWith(".jar")) {// $NON-NLS-1$
+                        File jar = new File(f, name);
+                        return jar.isFile() && jar.canRead();
+                    }
+                    return false;
+                }
+            });
+        }
+        return new File[0];
     }
 }
