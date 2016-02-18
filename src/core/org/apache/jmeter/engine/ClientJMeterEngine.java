@@ -27,12 +27,15 @@ import java.rmi.RemoteException;
 import java.rmi.server.RemoteObject;
 import java.util.Properties;
 
+import org.apache.jmeter.protocol.java.test.DistributedRunnerId;
 import org.apache.jmeter.services.FileServer;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
+
+import kraken.common.UserManager;
 
 /**
  * Class to run remote tests from the client JMeter and collect remote samples
@@ -58,6 +61,7 @@ public class ClientJMeterEngine implements JMeterEngine {
                RemoteObject robj = (RemoteObject) remobj;
                System.out.println("Using remote object: "+robj.getRef().remoteToString());
            }
+           rje.rsetRunnerId(DistributedRunnerId.getRunnerId());
            return rje;
        }
        throw new RemoteException("Could not find "+name);
@@ -166,11 +170,12 @@ public class ClientJMeterEngine implements JMeterEngine {
         String reaperRE = JMeterUtils.getPropDefault("rmi.thread.name", "^RMI Reaper$");
         for(Thread t : Thread.getAllStackTraces().keySet()){
             String name = t.getName();
-            if (name.matches(reaperRE)) {
+            if (name.matches(reaperRE) || name.matches("^p-UserManager-.*$") ) {
                 logger.info("Interrupting "+name);
                 t.interrupt();
             }
         }
+        UserManager.started = false;
     }
 
     /** {@inheritDoc} */
